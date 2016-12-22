@@ -2,6 +2,7 @@ import smtplib
 from datetime import datetime
 import cPickle
 import os
+import enum
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -10,6 +11,11 @@ from email.mime.text import MIMEText
 # you == recipient's email address
 me = "aivin.solatorio.ext@gmail.com"
 you = "avsolatorio@gmail.com"
+
+class return_code_enum(enum.Enum):
+    failed = 0
+    success = 1
+
 
 with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'personal_email_creds.dict')) as fl:
     # Load the credentials containing name and passwd for gmail.
@@ -32,6 +38,8 @@ def email_to_me(text, html='', subject='Public IP Change'):
     # the HTML message, is best and preferred.
     msg.attach(part1)
     msg.attach(part2)
+
+    return_code = return_code_enum.success
     try:
         # Send the message via local SMTP server.
         mail = smtplib.SMTP('smtp.gmail.com', 587)
@@ -47,4 +55,7 @@ def email_to_me(text, html='', subject='Public IP Change'):
     except Exception as e:
         print('{}: Error ({})\n\tMessage ({})'.format(datetime.now(), type(e), e.args[0]))
         print('\tMessage not sent: {}'.format(text))
+        return_code = return_code_enum.failed
+
+    return return_code
 

@@ -1,7 +1,7 @@
 import subprocess as sub
 import time
 from datetime import datetime
-from personal_email_sender import email_to_me
+from personal_email_sender import email_to_me, return_code_enum
 import os
 import cPickle
 
@@ -69,7 +69,10 @@ if __name__ == '__main__':
             </html>
             """.format(NAME, init_ip, new_ip)
 
-            email_to_me(text, html)
+            return_code = return_code_enum.failed
+            while return_code != return_code_enum.success:
+                return_code = email_to_me(text, html)
+
             print('Email sent to Notify change in IP!')
 
             init_ip = new_ip
