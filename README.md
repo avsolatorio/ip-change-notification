@@ -10,12 +10,12 @@ Specifically, this can also be used in raspberry pi's if you want to access it r
 ### Requirements
 This needs a pickled file called `personal_email_creds.dict` containing your gmail credentials. This part is not secure, so make sure that nobody gets access to this file!
 
-Here's how you can generate the pickle credentials. This file should be in the same directory as the script files.
+Here's how you can generate the pickle credentials. This file should be in the `./data` directory of this project.
 
 ```
 import cPickle
 
-with open('personal_email_creds.dict', 'w') as fl:
+with open('./data/personal_email_creds.dict', 'w') as fl:
     creds = dict(name=<your_gmail_name>, passwd=<gmail_account_passwd>)
     cPickle.dump(creds, fl)
 ```
@@ -23,3 +23,5 @@ with open('personal_email_creds.dict', 'w') as fl:
 ### Running automatically
 For this to serve its purpose, this script should run automatically on startup or whenever it's not running!
 This is done by installing the entry I placed in the `crontab.entry` file into your server's crontab.
+
+An assumption here is that the project is in your home directory. You can just simply make a symbolic link from the actual project location to your home directory.
