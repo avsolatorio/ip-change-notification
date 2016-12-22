@@ -1,6 +1,6 @@
 # ip-change-notification
 
-This module is designed to keep track of the current public ip address of a server.
+This module is designed to keep track of the current public ip address of a server by sending an e-mail to your designated recipient (set in the credentials file below).
 
 If you don't have a DDNS setup, this can help you connect to, for example, a server at home via the ip address (with proper firewall/ports setup of course!).
 
@@ -8,7 +8,7 @@ Specifically, this can also be used in raspberry pi's if you want to access it r
 
 
 ### Requirements
-This needs a pickled file called `personal_email_creds.dict` containing your gmail credentials. This part is not secure, so make sure that nobody gets access to this file!
+This needs a pickled file called `personal_email_creds.dict` containing your gmail credentials (name, passwd, and recipient email address). This part is not secure, so make sure that nobody gets access to this file!
 
 Here's how you can generate the pickle credentials. This file should be in the `./data` directory of this project.
 
@@ -16,7 +16,7 @@ Here's how you can generate the pickle credentials. This file should be in the `
 import cPickle
 
 with open('./data/personal_email_creds.dict', 'w') as fl:
-    creds = dict(name=<your_gmail_name>, passwd=<gmail_account_passwd>)
+    creds = dict(name=<your_gmail_name>, passwd=<gmail_account_passwd>, recipient=<recipient_email_address>)
     cPickle.dump(creds, fl)
 ```
 
