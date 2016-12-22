@@ -1,0 +1,1 @@
+* * * * * [ -f /tmp/public_ip_checker.py.lock ] || ~/ip-change-notification/src/start_ip_checker.sh

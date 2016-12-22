@@ -1,1 +1,0 @@
-* * * * * [ -f /tmp/public_ip_checker.py.lock ] || /home/avsolatorio/WORK/utils/ip-change-notification/start_ip_checker.sh

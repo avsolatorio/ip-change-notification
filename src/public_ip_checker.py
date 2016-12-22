@@ -51,7 +51,7 @@ if __name__ == '__main__':
     email_to_me(pid_text, pid_html, subject='Public IP checker started with pid: {}'.format(pid))
 
     ip_check_command = 'wget http://ipinfo.io/ip -qO -'
-    ip_archive_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'ip_archive.dict')
+    ip_archive_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../data/ip_archive.dict')
     
     ips = {}
     if os.path.isfile(ip_archive_file):        

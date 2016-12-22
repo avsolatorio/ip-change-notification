@@ -7,19 +7,19 @@ import enum
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-# me == my email address
-# you == recipient's email address
-me = "aivin.solatorio.ext@gmail.com"
-you = "avsolatorio@gmail.com"
 
 class return_code_enum(enum.Enum):
     failed = 0
     success = 1
 
 
-with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'personal_email_creds.dict')) as fl:
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../data/personal_email_creds.dict')) as fl:
     # Load the credentials containing name and passwd for gmail.
     creds = cPickle.load(fl)
+
+
+me =  "{}@gmail.com".format(creds['name'])
+you = "{}".format(creds['recipient'])
 
 
 def email_to_me(text, html='', subject='Public IP Change'):
