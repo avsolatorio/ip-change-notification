@@ -4,11 +4,37 @@ from datetime import datetime
 from personal_email_sender import email_to_me, return_code_enum
 import os
 import cPickle
+from signal import (
+    signal, SIGABRT, SIGILL, SIGINT, SIGSEGV, SIGTERM
+)
+import atexit
+import sys
 
+
+lock_file = '/tmp/{}.lock'.format(__file__)
+signal_set = (SIGABRT, SIGILL, SIGINT, SIGSEGV, SIGTERM)
+
+
+def remove_lock(*args):
+    os.remove(lock_file)
+    sys.exit(0)
+
+
+def make_lock():
+    with file(lock_file, 'w'):
+        pass
+
+    for sig in signal_set:
+        signal(sig, remove_lock)
+
+
+atexit.register(remove_lock)
 
 if __name__ == '__main__':
     NAME = 'Aivin'
+
     pid = os.getpid()
+    make_lock()
 
     print('Script pid is: {}'.format(pid))
 
