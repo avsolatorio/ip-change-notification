@@ -1,6 +1,7 @@
 import smtplib
 from datetime import datetime
 import cPickle
+import os
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -10,7 +11,7 @@ from email.mime.text import MIMEText
 me = "aivin.solatorio.ext@gmail.com"
 you = "avsolatorio@gmail.com"
 
-with open('personal_email_creds.dict') as fl:
+with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'personal_email_creds.dict')) as fl:
     # Load the credentials containing name and passwd for gmail.
     creds = cPickle.load(fl)
 
