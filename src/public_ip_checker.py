@@ -28,6 +28,29 @@ def make_lock():
         signal(sig, remove_lock)
 
 
+def update_remote_server(ip, now):
+    remote_status_text = '''
+    <h1>Current public ip: {}</h1>
+    <br>
+    <h3>Updated at: {}</h3>
+    '''.format(ip, now)
+
+    remote_status_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../data/home-public-ip.html')
+    with open(remote_status_path, 'w') as fl:
+        fl.write(remote_status_text)
+
+    try:
+        sub.check_call(
+            [
+                'scp',
+                remote_status_path,
+                'my-linode:~/home-public-ip/home-public-ip.html'
+            ]
+        )
+    except CalledProcessError:
+        print('Something went wrong in syncing with the remove server...')
+
+
 atexit.register(remove_lock)
 
 if __name__ == '__main__':
@@ -75,15 +98,13 @@ if __name__ == '__main__':
         p = sub.Popen(ip_check_command, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
         stdout, stderr = p.communicate()
 
+        now = datetime.now()
         if stdout.strip() != init_ip:
             new_ip = stdout.strip()
 
-            now = datetime.now()
             ips[now] = new_ip
             with open(ip_archive_file, 'w') as fl:
                 cPickle.dump(ips, fl)
-
-            text = "Hey {}!\n\nI detected that your public IP address changed from {} to {}!".format(NAME, init_ip, new_ip)
             html = """\
             <html>
               <head></head>
@@ -103,7 +124,8 @@ if __name__ == '__main__':
 
             init_ip = new_ip
 
+        update_remote_server(init_ip, now)
         # Sleep for 15 minutes
-        print('Sleeping for 15 minutes...')
+        print('{}: Sleeping for 15 minutes...'.format(datetime.now()))
         time.sleep(15 * 60)
 
