@@ -61,7 +61,7 @@ atexit.register(remove_lock)
 if __name__ == '__main__':
     NAME = 'Aivin'
     INIT_SLEEP_TIME = 0.1  # minutes
-    CHECK_FREQUENCY = 5  # minutes
+    CHECK_FREQUENCY = 15  # minutes
 
     pid = os.getpid()
     make_lock()
