@@ -28,6 +28,10 @@ def make_lock():
         signal(sig, remove_lock)
 
 
+def log_print(x):
+    print('{}: {}'.format(datetime.now(), x))
+
+
 def update_remote_server(ip, now):
     remote_status_text = '''
     <h1>Current public ip: {}</h1>
@@ -48,8 +52,8 @@ def update_remote_server(ip, now):
             ]
         )
     except Exception as e:
-        print('Something went wrong in syncing with the remove server...')
-        print('Error {} message {}'.format(type(e), e.message))
+        log_print('Something went wrong in syncing with the remove server...')
+        log_print('Error {} message {}'.format(type(e), e.message))
 
 
 # atexit.register(remove_lock)
@@ -62,7 +66,7 @@ if __name__ == '__main__':
     pid = os.getpid()
     make_lock()
 
-    print('Script pid is: {}'.format(pid))
+    log_print('Script pid is: {}'.format(pid))
 
     pid_text = "IP checker script launched with pid: {}".format(pid)
     pid_html = """\
@@ -89,7 +93,7 @@ if __name__ == '__main__':
 
     is_init_check = True
 
-    print('Starting IP checker!')
+    log_print('Starting IP checker!')
 
     while True:
         # Check only after INIT_SLEEP_TIME minute of launching the app
@@ -97,7 +101,7 @@ if __name__ == '__main__':
             time.sleep(INIT_SLEEP_TIME * 60)
             is_init_check = False
 
-        print('Starting to check public IP...')
+        log_print('Starting to check public IP...')
         p = sub.Popen(ip_check_command, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
         stdout, stderr = p.communicate()
 
@@ -123,12 +127,12 @@ if __name__ == '__main__':
             while return_code != return_code_enum.success:
                 return_code = email_to_me(text, html)
 
-            print('Email sent to Notify change in IP!')
+            log_print('Email sent to Notify change in IP!')
 
             init_ip = new_ip
 
         update_remote_server(init_ip, now)
         # Sleep for CHECK_FREQUENCY minutes
-        print('{}: Sleeping for {} minutes...'.format(datetime.now()), CHECK_FREQUENCY)
+        log_print('Sleeping for {} minutes...'.format(CHECK_FREQUENCY))
         time.sleep(CHECK_FREQUENCY * 60)
 
