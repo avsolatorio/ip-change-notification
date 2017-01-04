@@ -15,8 +15,18 @@ lock_file = '/tmp/{}.lock'.format(__file__)
 signal_set = (SIGABRT, SIGILL, SIGINT, SIGSEGV, SIGTERM)
 
 
+def log_print(x):
+    print('{}: {}'.format(datetime.now(), x))
+
+
 def remove_lock(*args):
-    os.remove(lock_file)
+    try:
+        os.remove(lock_file)
+        log_print('Terminating service!')
+    except OSError:
+        # The lock is already not present.
+        pass
+
     sys.exit(0)
 
 
@@ -26,10 +36,6 @@ def make_lock():
 
     for sig in signal_set:
         signal(sig, remove_lock)
-
-
-def log_print(x):
-    print('{}: {}'.format(datetime.now(), x))
 
 
 def update_remote_server(ip, now):
