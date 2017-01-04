@@ -56,7 +56,7 @@ def update_remote_server(ip, now):
         log_print('Error {} message {}'.format(type(e), e.message))
 
 
-# atexit.register(remove_lock)
+atexit.register(remove_lock)
 
 if __name__ == '__main__':
     NAME = 'Aivin'
