@@ -28,7 +28,7 @@ for key, note in key_notes.iteritems():
 
 creds_file = os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
-    '../data/personal_email_creds.dict'
+    '../../data/personal_email_creds.dict'
 )
 
 with open(creds_file, 'w') as fl:
