@@ -47,14 +47,17 @@ def update_remote_server(ip, now):
                 'my-linode:~/home-public-ip/home-public-ip.html'
             ]
         )
-    except CalledProcessError:
+    except Exception as e:
         print('Something went wrong in syncing with the remove server...')
+        print('Error {} message {}'.format(type(e), e.message))
 
 
-atexit.register(remove_lock)
+# atexit.register(remove_lock)
 
 if __name__ == '__main__':
     NAME = 'Aivin'
+    INIT_SLEEP_TIME = 0.1  # minutes
+    CHECK_FREQUENCY = 5  # minutes
 
     pid = os.getpid()
     make_lock()
@@ -89,9 +92,9 @@ if __name__ == '__main__':
     print('Starting IP checker!')
 
     while True:
-        # Check only after 1 minute of launching the app
+        # Check only after INIT_SLEEP_TIME minute of launching the app
         if is_init_check:
-            time.sleep(1 * 60)
+            time.sleep(INIT_SLEEP_TIME * 60)
             is_init_check = False
 
         print('Starting to check public IP...')
@@ -125,7 +128,7 @@ if __name__ == '__main__':
             init_ip = new_ip
 
         update_remote_server(init_ip, now)
-        # Sleep for 15 minutes
-        print('{}: Sleeping for 15 minutes...'.format(datetime.now()))
-        time.sleep(15 * 60)
+        # Sleep for CHECK_FREQUENCY minutes
+        print('{}: Sleeping for {} minutes...'.format(datetime.now()), CHECK_FREQUENCY)
+        time.sleep(CHECK_FREQUENCY * 60)
 
