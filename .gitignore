@@ -1,4 +1,5 @@
 # Additional
+*.cron
 *.html
 *.dict
 *.pkl
