@@ -22,10 +22,16 @@ linode_host_data = os.path.join(
 with open(linode_host_data) as fl:
     linode_payload = cPickle.load(fl)
 
-update_api = 'https://api.linode.com/?api_key={api_key}\&api_action=domain.resource.update\&domainid={domainid}\&resourceid={resourceid}\&target=[remote_addr]'.format(**linode_payload)
+
+cron_entry = []
 
 
-linode_update_cron_entry = "*/10 * * * * /bin/echo `/bin/date`: `/usr/bin/wget -qO- --no-check-certificate {}` >> /var/log/linode_dyndns.log".format(update_api)
+for lp in linode_payload:
+    update_api = 'https://api.linode.com/?api_key={api_key}\&api_action=domain.resource.update\&domainid={domainid}\&resourceid={resourceid}\&target=[remote_addr]'.format(**lp)
+
+    linode_update_cron_entry = "*/10 * * * * /bin/echo `/bin/date`: `/usr/bin/wget -qO- --no-check-certificate {}` >> /var/log/linode_dyndns.log".format(update_api)
+
+    cron_entry.append(linode_update_cron_entry)
 
 cron_entry_file = os.path.join(
     data_dir,
@@ -33,5 +39,5 @@ cron_entry_file = os.path.join(
 )
 
 with open(cron_entry_file, 'w') as fl:
-    fl.write(linode_update_cron_entry)
+    fl.write('\n'.join(cron_entry))
 
