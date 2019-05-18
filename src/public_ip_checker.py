@@ -62,6 +62,17 @@ def update_remote_server(ip, now):
         log_print('Error {} message {}'.format(type(e), e.message))
 
 
+def get_ip():
+    ip_check_command = 'wget http://ipinfo.io/ip -qO -'
+    log_print('Starting to check public IP...')
+    p = sub.Popen(ip_check_command, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
+    stdout, stderr = p.communicate()
+
+    new_ip = stdout.strip()
+
+    return new_ip
+
+
 atexit.register(remove_lock)
 
 if __name__ == '__main__':
@@ -74,19 +85,21 @@ if __name__ == '__main__':
 
     log_print('Script pid is: {}'.format(pid))
 
+    curr_ip = get_ip()
+
     pid_text = "IP checker script launched with pid: {}".format(pid)
     pid_html = """\
             <html>
               <head></head>
               <body>
                 <p>IP checker script launched with pid: {}</p>
+                <p>Current IP: {}</p>
               </body>
             </html>
-            """.format(pid)
+            """.format(pid, curr_ip)
 
     email_to_me(pid_text, pid_html, subject='Public IP checker started with pid: {}'.format(pid))
 
-    ip_check_command = 'wget http://ipinfo.io/ip -qO -'
     ip_archive_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../data/ip_archive.dict')
     
     ips = {}
@@ -107,13 +120,9 @@ if __name__ == '__main__':
             time.sleep(INIT_SLEEP_TIME * 60)
             is_init_check = False
 
-        log_print('Starting to check public IP...')
-        p = sub.Popen(ip_check_command, shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
-        stdout, stderr = p.communicate()
-
+        new_ip = get_ip()
         now = datetime.now()
-        if stdout.strip() != init_ip:
-            new_ip = stdout.strip()
+        if new_ip != init_ip:
 
             ips[now] = new_ip
             with open(ip_archive_file, 'w') as fl:
