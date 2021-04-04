@@ -3,6 +3,14 @@
 *.html
 *.dict
 *.pkl
+*.key
+
+*.cron.*
+*.html.*
+*.dict.*
+*.pkl.*
+*.key.*
+
 nohup.out
 
 # Byte-compiled / optimized / DLL files
